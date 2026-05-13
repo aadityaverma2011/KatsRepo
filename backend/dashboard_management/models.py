@@ -1,3 +1,2 @@
-from django.db import models
-
+from .model_classes.template import Template
 # Create your models here.
