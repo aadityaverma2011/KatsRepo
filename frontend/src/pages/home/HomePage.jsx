@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@clerk/clerk-react";
-import { UserButton } from "@clerk/clerk-react";
+import { useAuth, UserButton } from "@clerk/clerk-react";
 import ProfileCard from "../../components/ProfileCard.jsx";
-import TemplateGrid from "../../components/TemplateGrid.jsx"; // Import new component
-import {apiRequest} from "../../services/apiClient.js";
-
+import TemplateGrid from "../../components/TemplateGrid.jsx";
+import SubscriptionModal from "../../components/SubscriptionModal.jsx";
+import { apiRequest } from "../../services/apiClient.js";
+import { API_ENDPOINTS } from "../../constants/apiEndpoints.js";
 import "./HomePage.css";
-import {API_ENDPOINTS} from "../../constants/apiEndpoints.js";
 
 const HomePage = () => {
     const { getToken } = useAuth();
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Fetch templates from the Django backend on mount
     useEffect(() => {
         const fetchTemplates = async () => {
             try {
@@ -27,6 +28,16 @@ const HomePage = () => {
 
         fetchTemplates();
     }, [getToken]);
+
+    // Handler to check if template is paid before allowing access
+    const handleTemplateClick = (template) => {
+        if (template.is_paid) {
+            setIsModalOpen(true);
+        } else {
+            console.log("Accessing free template:", template.title);
+            // Logic for free template usage goes here
+        }
+    };
 
     return (
         <div className="dashboard-container">
@@ -48,12 +59,31 @@ const HomePage = () => {
                 <ProfileCard />
 
                 <section style={{ width: '100%', marginTop: '60px' }}>
-                    <h3 style={{ color: 'var(--text-muted)', fontSize: '14px', letterSpacing: '2px', textAlign: 'center' }}>
-                        AVAILABLE TEMPLATES
+                    <h3 style={{
+                        color: 'var(--text-muted)',
+                        fontSize: '11px',
+                        fontWeight: '600',
+                        letterSpacing: '2px',
+                        textAlign: 'center',
+                        textTransform: 'uppercase',
+                        marginBottom: '30px'
+                    }}>
+                        Available Templates
                     </h3>
-                    <TemplateGrid templates={templates} loading={loading} />
+
+                    <TemplateGrid
+                        templates={templates}
+                        loading={loading}
+                        onTemplateClick={handleTemplateClick}
+                    />
                 </section>
             </main>
+
+            {/* Subscription Modal for gated content */}
+            <SubscriptionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </div>
     );
 };

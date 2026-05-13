@@ -1,12 +1,17 @@
 import "./TemplateGrid.css";
 
-const TemplateGrid = ({ templates, loading }) => {
+const TemplateGrid = ({ templates, loading, onTemplateClick }) => {
     if (loading) return <div className="loader">Syncing Templates...</div>;
 
     return (
         <div className="template-grid">
             {templates.map((template) => (
-                <div key={template.id} className="template-card">
+                <div
+                    key={template.id}
+                    className="template-card"
+                    onClick={() => onTemplateClick(template)}
+                    style={{ cursor: 'pointer' }}
+                >
                     <div className="template-image-wrapper">
                         <img src={template.image_url} alt={template.title} className="template-img" />
                         <span className={`status-badge ${template.is_paid ? 'paid' : 'free'}`}>

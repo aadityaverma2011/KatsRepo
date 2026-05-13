@@ -1,0 +1,132 @@
+/* SubscriptionModal.css */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 4, 8, 0.9); /* Deep midnight overlay */
+    backdrop-filter: blur(16px) saturate(180%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #0d1117; /* Solid dark base */
+    border: 1px solid #30363d;
+    border-radius: 12px; /* Sharper corners for a more professional feel */
+    padding: 0; /* Remove internal padding for the header/body split */
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 20px 50px rgba(0, 0, 0, 0.6);
+    animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Subtle glowing accent at the top */
+.modal-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #58a6ff, transparent);
+}
+
+.modal-header {
+    padding: 32px 32px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.modal-body {
+    padding: 24px 32px 40px 32px;
+}
+
+.close-button {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.close-button:hover {
+    background: #21262d;
+    color: #f0f6fc;
+    border-color: #8b949e;
+}
+
+.modal-icon-badge {
+    display: inline-flex;
+    padding: 10px;
+    background: rgba(88, 166, 255, 0.1);
+    border-radius: 8px;
+    color: #58a6ff;
+    margin-bottom: 24px;
+}
+
+.modal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: #f0f6fc;
+    letter-spacing: -0.5px;
+}
+
+.modal-text {
+    font-size: 14px;
+    color: #8b949e;
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.buy-button {
+    background: #f0f6fc;
+    color: #0d1117;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.buy-button:hover {
+    opacity: 0.9;
+}
+
+.secondary-action {
+    background: transparent;
+    color: #8b949e;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
