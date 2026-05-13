@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
-import { useAuth, UserButton } from "@clerk/clerk-react";
+import { useAuth, useUser, UserButton } from "@clerk/clerk-react";
 import ProfileCard from "../../components/ProfileCard.jsx";
 import TemplateGrid from "../../components/TemplateGrid.jsx";
 import SubscriptionModal from "../../components/SubscriptionModal.jsx";
+import EditTemplate from "../../components/EditTemplate.jsx";
 import { apiRequest } from "../../services/apiClient.js";
 import { API_ENDPOINTS } from "../../constants/apiEndpoints.js";
 import "./HomePage.css";
 
 const HomePage = () => {
     const { getToken } = useAuth();
+    const { user } = useUser();
+
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTemplate, setEditingTemplate] = useState(null);
 
-    // Fetch templates from the Django backend on mount
+
     useEffect(() => {
         const fetchTemplates = async () => {
             try {
@@ -29,13 +33,14 @@ const HomePage = () => {
         fetchTemplates();
     }, [getToken]);
 
-    // Handler to check if template is paid before allowing access
+
     const handleTemplateClick = (template) => {
         if (template.is_paid) {
+
             setIsModalOpen(true);
         } else {
-            console.log("Accessing free template:", template.title);
-            // Logic for free template usage goes here
+            // Open the Drawing Board for free templates
+            setEditingTemplate(template);
         }
     };
 
@@ -56,6 +61,7 @@ const HomePage = () => {
                     <h2 className="welcome-title">Welcome</h2>
                 </div>
 
+                {/* Profile Card showing user details */}
                 <ProfileCard />
 
                 <section style={{ width: '100%', marginTop: '60px' }}>
@@ -79,11 +85,20 @@ const HomePage = () => {
                 </section>
             </main>
 
-            {/* Subscription Modal for gated content */}
+            {/* Premium gate for paid templates */}
             <SubscriptionModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
+
+            {/* Drawing board for free templates */}
+            {editingTemplate && (
+                <EditTemplate
+                    template={editingTemplate}
+                    user={user}
+                    onClose={() => setEditingTemplate(null)}
+                />
+            )}
         </div>
     );
 };
